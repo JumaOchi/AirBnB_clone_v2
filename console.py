@@ -2,7 +2,7 @@
 """ Console Module """
 import cmd
 import sys
-from models.base_model import BaseModel
+from  models.base_model import BaseModel
 from models.__init__ import storage
 from models.user import User
 from models.place import Place
@@ -113,6 +113,7 @@ class HBNBCommand(cmd.Cmd):
     def emptyline(self):
         """ Overrides the emptyline method of CMD """
         pass
+
     def parseArguments(self, args):
         """Convert a list of key value pairs to valid kwargs
         string :double quote inside value must be escaped with a backslash \
@@ -135,7 +136,6 @@ class HBNBCommand(cmd.Cmd):
                 value = int(value)
             dictionary[key] = value
         return dictionary
-
 
     def do_create(self, args):
         """ Create an object of any class"""
@@ -351,6 +351,7 @@ class HBNBCommand(cmd.Cmd):
         """ Help information for the update class """
         print("Updates an object with new information")
         print("Usage: update <className> <id> <attName> <attVal>\n")
+
 
 if __name__ == "__main__":
     HBNBCommand().cmdloop()
