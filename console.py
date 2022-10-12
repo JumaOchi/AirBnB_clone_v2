@@ -10,6 +10,7 @@ from models.state import State
 from models.city import City
 from models.amenity import Amenity
 from models.review import Review
+from os import getenv
 
 
 class HBNBCommand(cmd.Cmd):
@@ -73,7 +74,7 @@ class HBNBCommand(cmd.Cmd):
                 pline = pline[2].strip()  # pline is now str
                 if pline:
                     # check for *args or **kwargs
-                    if pline[0] is '{' and pline[-1] is'}'\
+                    if pline[0] is '{' and pline[-1] is '}'\
                             and type(eval(pline)) is dict:
                         _args = pline
                     else:
@@ -112,19 +113,50 @@ class HBNBCommand(cmd.Cmd):
     def emptyline(self):
         """ Overrides the emptyline method of CMD """
         pass
+    def parseArguments(self, args):
+        """Convert a list of key value pairs to valid kwargs
+        string :double quote inside value must be escaped with a backslash \
+        underscores _ must be replace by spaces
+        Float: <unit>.<decimal> => contains a dot .
+        Integer: <number> => default case
+        """
+        dictionary = {}
+        for arg in args:
+            key, value = arg.split("=")
+            if value[0] == '"':
+                value = value.strip('"')
+                value = value.replace('"', '\"')
+                value = value.replace('_', ' ')
+            elif '.' in value:
+                value = float(value)
+            elif ',' in value:
+                continue
+            else:
+                value = int(value)
+            dictionary[key] = value
+        return dictionary
+
 
     def do_create(self, args):
         """ Create an object of any class"""
         if not args:
             print("** class name missing **")
             return
-        elif args not in HBNBCommand.classes:
+
+        args = args.split(" ")
+        class_name = args[0]
+        if class_name not in HBNBCommand.classes:
             print("** class doesn't exist **")
             return
-        new_instance = HBNBCommand.classes[args]()
+        new_instance = HBNBCommand.classes[class_name]()
+        attributes = HBNBCommand.parseArguments(args[1:])
+        if attributes:
+            for attribute, i in attributes.items():
+                setattr(new_instance, attribute, i)
         storage.save()
         print(new_instance.id)
-        storage.save()
+        # storage.save()
+        new_instance.save()
 
     def help_create(self):
         """ Help information for the create method """
