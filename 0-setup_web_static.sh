@@ -1,4 +1,3 @@
-
 #!/usr/bin/env bash
 # script that sets up your web servers for the deployment of web_static
 
@@ -29,7 +28,8 @@ chown -R ubuntu:ubuntu /data/
 # Update Nginx configuration to serve the content of /data/web_static/current/
 # to hbnb_static (https://mydomainname.tech/hbnb_static)
 config_file="/etc/nginx/sites-available/default"
-sudo sed -i '/server_name .*;/a \tlocation /hbnb_static/ {\n\t\talias /data/web_static/current/;\n\t}\n' $config_file
+sudo sed -i '/^\tserver_name/ a\\tlocation /hbnb_static \{\n\t\talias /data/web_static/current/;\n\t}\n' $config_file
 
 # restart server
 sudo service nginx restart
+
