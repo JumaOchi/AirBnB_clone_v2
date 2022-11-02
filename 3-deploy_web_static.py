@@ -10,7 +10,7 @@ from datetime import datetime
 
 dt = datetime.now()
 
-env.hosts = ['34.74.35.201', '35.196.181.73']
+env.hosts = ['100.27.49.224','54.146.91.191']
 
 
 def do_pack():
